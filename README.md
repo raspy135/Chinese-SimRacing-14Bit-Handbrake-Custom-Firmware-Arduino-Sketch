@@ -1,5 +1,10 @@
+## Note
+
+This is slightly modified version of the firmware by Ryan Kojima.
+
 # Chinese SimRacing 14Bit Handbrake Custom Firmware (Arduino Sketch)
 Alternative Firmaware for Chinese "14 Bit" Sim Racing Handbrake by Daniel Korgel
+
 
 <img src="https://i.imgur.com/D5v82bh.jpg" width="350" alt="Product image of the handbrake">
 
