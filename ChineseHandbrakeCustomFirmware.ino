@@ -21,8 +21,10 @@
 
 #include <Joystick.h>
 
-int minValue = 507;
-int maxValue = 765.0f;
+int32_t minValue = 1000;//507;
+int32_t maxValue = 550;
+
+//#define DEBUG
 
 Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID,JOYSTICK_TYPE_GAMEPAD,
   2,                      // Button Count
@@ -34,10 +36,10 @@ Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID,JOYSTICK_TYPE_GAMEPAD,
 
 void setup() {
   
-#if DEBUG
+#ifdef DEBUG
     Serial.begin(9600);
 #endif
-  
+  //analogReadResolution(12);
   // Initialize Button Pins
   pinMode(PIN_HALL_SENSOR, INPUT);
   
@@ -49,6 +51,16 @@ void setup() {
   // Initialize Joystick Library
   Joystick.begin();
   Joystick.setZAxisRange(0, AXIS_RESOLUTION);
+
+  //self calibration:
+  for(int i = 0;i < 20;i++){
+    int32_t hallSensorValue = 0;
+    hallSensorValue += analogRead(PIN_HALL_SENSOR);
+    if(hallSensorValue < minValue){
+      minValue = hallSensorValue;
+    }
+    delay(10);
+  }
 }
 
 
@@ -58,23 +70,30 @@ void loop() {
   Joystick.setButton(0, digitalRead(PIN_BUTTON_0)==LOW);
   Joystick.setButton(1, digitalRead(PIN_BUTTON_1)==LOW);
 
-  int hallSensorValue = analogRead(PIN_HALL_SENSOR);
+  int32_t hallSensorValue = 0;
+  for(int i = 0;i < 16;i++)
+    hallSensorValue += analogRead(PIN_HALL_SENSOR);
   
-  //self calibration:
-  if(hallSensorValue < minValue){
-    minValue = hallSensorValue;
-  }else if(hallSensorValue > maxValue){
+  hallSensorValue = hallSensorValue >>4;
+
+if(hallSensorValue > maxValue){
     maxValue = hallSensorValue;
   }
-  
-  float zAxisValue = (hallSensorValue-minValue)/(float)(maxValue-minValue) * AXIS_RESOLUTION;
- 
-#if DEBUG
+  //5 for dead area
+  int baseVal = hallSensorValue - minValue - 5;
+  if(baseVal < 0) baseVal = 0;
+  float zAxisValue = (baseVal)/(float)(maxValue-minValue-5) * AXIS_RESOLUTION;
+#ifdef DEBUG
     Serial.print(hallSensorValue);
+    Serial.print(" - ");
+    Serial.print(minValue);
     Serial.print(" - ");
     Serial.println(zAxisValue);
 #endif
   Joystick.setZAxis(zAxisValue);
-
-  delay(10);
+#ifdef DEBUG
+  delay(100);
+#else
+  delay(3);
+#endif
 }
