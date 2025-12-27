@@ -2,6 +2,7 @@
 
 This is slightly modified version of the firmware by Ryan Kojima.
 
+
 # Chinese SimRacing 14Bit Handbrake Custom Firmware (Arduino Sketch)
 Alternative Firmaware for Chinese "14 Bit" Sim Racing Handbrake by Daniel Korgel
 
@@ -54,3 +55,9 @@ Pin 3 and pin 1 of the arduino were also soldered on my board, but there are no 
 [Bottom View of the v3 PCB](14bit%20v3%20images/pcb_v3_bottom_anot.jpg?raw=true "Bottom View of the v3 PCB")
 
 **Note: I know that there's at least a version 4.0 of this PCB, but I don't know the exact differences.**
+
+
+## Other PCB versions
+
+My PCB board was one PCB with ATMega32U4 with SMT hall sensor chip, so I guess it's later version of the PCB.
+USB programming was not possible because lockbit was set. Programming via ISP was possible.
